@@ -73,7 +73,10 @@ if __name__ == '__main__':
     # Call the function to start extracting the queries
     
     topics = DataManager.extract_query_xml()
-    for item in topics:
-        es_query(item)
-
+    while 1:
+        str = input("Enter the topic number you want to search 1~30, Enter 'q' to quit: ")
+        if str == "q":
+            break
+        idx = int(str) - 1
+        es_query(topics[idx])
     
