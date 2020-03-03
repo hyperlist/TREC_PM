@@ -58,8 +58,9 @@ def es_query(extracted_data):
                  },
         }, size=1000)
         
-        print(res)
-        
+        #print(res)
+        print(res['hits']["total"],res['hits']["max_score"])
+        res = res['hits']['hits']
     except Exception as e:
         print("\nUnable to query/write!")
         print('Error Message:', e, '\n')
