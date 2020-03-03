@@ -23,7 +23,7 @@ def extract_ct_xml(kernel_index):
         extracted_data = DataManager.ct_extract(path=input_file)
         ct_index(ctr, extracted_data)
         ctr = ctr + 1
-        if(ctr%100==0):
+        if(ctr%600==0):
             print('kernel_index', kernel_index,' at ',ctr)
     print(kernel_index,' finish ',file_path)
 
@@ -40,8 +40,6 @@ def ct_index(ctr, extracted_data):
 
 
 if __name__ == '__main__':
-    extract_ct_xml(0)
-    '''
     try:
         es = elasticsearch.Elasticsearch([{'host': 'localhost', 'port': 9200}])
     except Exception as e:
@@ -60,4 +58,4 @@ if __name__ == '__main__':
 
     # Print the total execution time
     print("\nExecution time: %.2f seconds" % (time.time() - start_time))
-   '''
+   

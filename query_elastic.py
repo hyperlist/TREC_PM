@@ -1,4 +1,5 @@
 import elasticsearch
+from data import DataManager
 
 def es_query(extracted_data):
     """
@@ -37,13 +38,15 @@ def es_query(extracted_data):
                             "boost" : 3
                         }
                     },
+                    
                     "should":{
                         "multi_match": {
-                            "query" : query_word[group_id],
+                            "query" : disease_query,
                             "fields" : ["brief_summary", "detailed_description"],
                             "boost" : 1
                         }
                     },
+                    
                     "filter": {
                         "range": {"maximum_age": {"gte": age_query}},
                         "range": {"minimum_age": {"lte": age_query}}
