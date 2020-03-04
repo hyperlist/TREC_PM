@@ -60,7 +60,7 @@ def show_result(res):
         rank_ctr += 1
         
 def save_ct_result():
-    topics = DataManager.extract_xml()
+    topics = DataManager.extract_query_xml()
     rank_ctr = 1
     for item in topics:
         res = ct_query(item)
@@ -81,7 +81,7 @@ if __name__ == '__main__':
         raise Exception("\nCannot connect to Elasticsearch!")
     # Call the function to start extracting the queries
     save_ct_result()
-    topics = DataManager.extract_xml()
+    topics = DataManager.extract_query_xml()
     while 1:
         str = input("Enter the topic number you want to search 1~30, Enter 'q' to quit: ")
         if str == "q":
