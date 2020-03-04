@@ -29,6 +29,7 @@ def extract_ct_xml(kernel_index):
 
 def ct_index(ctr, extracted_data):
     #curl -H 'Content-Type:application/json' -XGET http://localhost:9200/ct/xml/1?pretty
+    #curl -X GET "localhost:9200/ct/xml/1?pretty"
     try:
         es.index(index='ct', doc_type='xml', id=ctr, body=extracted_data)
 

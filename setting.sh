@@ -34,17 +34,16 @@ source /etc/profile
 conda create -n python3 python=3.6 << EOF
 yes
 EOF
-source activate python3
 
 ####下载数据
 wget http://www.trec-cds.org/clinical_trials.0.tar.gz -P ./data/ClinicalTrials
 tar -xvf ./data/ClinicalTrials/clinical_trials.0.tar.gz -C ./data/ClinicalTrials
-wget http://www.trec-cds.org/clinical_trials.1.tar.gz -P ./data/ClinicalTrials
-tar -xvf ./data/ClinicalTrials/clinical_trials.1.tar.gz -C ./data/ClinicalTrials
-wget http://www.trec-cds.org/clinical_trials.2.tar.gz -P ./data/ClinicalTrials
-tar -xvf ./data/ClinicalTrials/clinical_trials.2.tar.gz -C ./data/ClinicalTrials
-wget http://www.trec-cds.org/clinical_trials.3.tar.gz -P ./data/ClinicalTrials
-tar -xvf ./data/ClinicalTrials/clinical_trials.3.tar.gz -C ./data/ClinicalTrials
+#wget http://www.trec-cds.org/clinical_trials.1.tar.gz -P ./data/ClinicalTrials
+#tar -xvf ./data/ClinicalTrials/clinical_trials.1.tar.gz -C ./data/ClinicalTrials
+#wget http://www.trec-cds.org/clinical_trials.2.tar.gz -P ./data/ClinicalTrials
+#tar -xvf ./data/ClinicalTrials/clinical_trials.2.tar.gz -C ./data/ClinicalTrials
+#wget http://www.trec-cds.org/clinical_trials.3.tar.gz -P ./data/ClinicalTrials
+#tar -xvf ./data/ClinicalTrials/clinical_trials.3.tar.gz -C ./data/ClinicalTrials
 
 ####增加系统用户es
 adduser es
@@ -54,6 +53,7 @@ passwd es << EOF
 EOF
 chown es /root -R
 chown es /usr/local/ -R
+
 #为es增加文件描述符
 echo 'es soft nofile 65536 ' >>  /etc/security/limits.conf
 echo 'es hard nofile  65536 ' >>  /etc/security/limits.conf

@@ -13,20 +13,31 @@ def extract_query_xml():
     datas = []
     topics = root.findall('topic')
     for index, item in enumerate(topics):
-        extracted_data = collections.OrderedDict()
+        extracted_data = {}
         extracted_data['tnum'] = index + 1
         extracted_data['disease'] = item.find('disease').text
         gene = item.find('gene').text
+        demographic = item.find('demographic').text
         #print(gene)
         try:
             m = re.findall( r'(.*) [(](.*?)[)]', gene)
             extracted_data['gene'] = m[0][0]
-            extracted_data['genecode'] = m[0][1]
+            extracted_data['gene_code'] = m[0][1]
         except:
-            extracted_data['gene'] = gene
+            extracted_data['gene'] = item.find('gene').text
             extracted_data['genecode'] = None
-        
-        demographic = item.find('demographic').text
+        try:
+            gene2 = gene.split(', ')[1]
+        except:
+            gene2 = None 
+        try:
+            m = re.findall( r'(.*) [(](.*?)[)]', gene2)
+            extracted_data['gene2'] = m[0][0]
+            extracted_data['gene2_code'] = m[0][1]
+        except:
+            extracted_data['gene2'] = gene2
+            extracted_data['gene2_code'] = None
+            
         try:
             extracted_data['age'] = int(demographic.split('-')[0])
         except:
@@ -40,7 +51,9 @@ def extract_query_xml():
         except:
             extracted_data['other'] = None
         datas.append(extracted_data)
-    #print(datas)
+        
+    #for item in datas:
+    #    print(item)
     return datas
 
 
@@ -165,7 +178,6 @@ def ct_extract(path=None, doc_id = None):
 
     # print(extracted_data)
     return extracted_data
-    '''
+
 if __name__ == '__main__':
     extract_query_xml()
-    '''
