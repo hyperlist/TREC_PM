@@ -121,7 +121,7 @@ def ct_extract(path=None, doc_id = None):
 
     # criteria
     try:
-        criteria = root.find('criteria').find('textblock').text
+        criteria = root.find('eligibility').find('criteria').find('textblock').text
         extracted_data['criteria'] = criteria
     except:
         extracted_data['criteria'] = None
