@@ -20,6 +20,24 @@ echo 'export JAVA_HOME=/usr/local/jdk/jdk-11.0.1' >> /etc/profile
 echo 'export PATH=$JAVA_HOME/bin:$PATH' >> /etc/profile
 source /etc/profile
 
+####增加系统用户es
+adduser es
+passwd es << EOF
+{p9Pq8.H9b22!)A[
+{p9Pq8.H9b22!)A[
+EOF
+chown es /root -R
+chown es /usr/local/ -R
+
+#为es增加文件描述符
+echo 'es soft nofile 65536 ' >>  /etc/security/limits.conf
+echo 'es hard nofile  65536 ' >>  /etc/security/limits.conf
+echo 'es soft nproc 4096 ' >>  /etc/security/limits.conf
+echo 'es hard nproc 4096' >>  /etc/security/limits.conf
+#增加虚拟内存区域
+echo 'vm.max_map_count=655360' >>  /etc/sysctl.conf
+sysctl -p
+
 ####python anaconda
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -P /root/soft
 bash /root/soft/Miniconda3-latest-Linux-x86_64.sh << EOF
@@ -44,21 +62,3 @@ wget http://www.trec-cds.org/clinical_trials.2.tar.gz -P ./data/ClinicalTrials
 tar -xvf ./data/ClinicalTrials/clinical_trials.2.tar.gz -C ./data/ClinicalTrials
 wget http://www.trec-cds.org/clinical_trials.3.tar.gz -P ./data/ClinicalTrials
 tar -xvf ./data/ClinicalTrials/clinical_trials.3.tar.gz -C ./data/ClinicalTrials
-
-####增加系统用户es
-adduser es
-passwd es << EOF
-{p9Pq8.H9b22!)A[
-{p9Pq8.H9b22!)A[
-EOF
-chown es /root -R
-chown es /usr/local/ -R
-
-#为es增加文件描述符
-echo 'es soft nofile 65536 ' >>  /etc/security/limits.conf
-echo 'es hard nofile  65536 ' >>  /etc/security/limits.conf
-echo 'es soft nproc 4096 ' >>  /etc/security/limits.conf
-echo 'es hard nproc 4096' >>  /etc/security/limits.conf
-#增加虚拟内存区域
-echo 'vm.max_map_count=655360' >>  /etc/sysctl.conf
-sysctl -p

@@ -20,10 +20,13 @@ def extract_ct_xml(kernel_index):
     print(len(list_of_files))
     ctr = ctr_list[kernel_index]
     for input_file in list_of_files:
-        extracted_data = DataManager.ct_extract(path=input_file)
+        try:
+            extracted_data = DataManager.ct_extract(path=input_file)
+        except Exception as e:
+            print('Error Message:', e)
         ct_index(ctr, extracted_data)
         ctr = ctr + 1
-        if(ctr%600==0):
+        if(ctr%300==0):
             print('kernel_index', kernel_index,' at ',ctr)
     print(kernel_index,' finish ',file_path)
 
@@ -32,7 +35,6 @@ def ct_index(ctr, extracted_data):
     #curl -X GET "localhost:9200/ct/xml/1?pretty"
     try:
         es.index(index='ct', doc_type='xml', id=ctr, body=extracted_data)
-
     except Exception as e:
         print('Document not indexed!')
         print('Error Message:', e)
