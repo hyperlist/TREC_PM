@@ -43,9 +43,9 @@ def extract_query_xml():
         except:
             extracted_data['age'] = None
         try:
-            extracted_data['sex'] = demographic.split(' ')[1]
+            extracted_data['gender'] = demographic.split(' ')[1]
         except:
-            extracted_data['sex'] = None
+            extracted_data['gender'] = None
         try:
             extracted_data['other'] = item.find('other').text
         except:
@@ -80,7 +80,7 @@ def ct_extract(path=None, doc_id = None):
         nct_id = root.find('id_info').find('nct_id').text
         extracted_data['nct_id'] = nct_id
     except:
-        extracted_data['nct_id'] = None
+        extracted_data['nct_id'] = doc_id
 
     # brief_title
     try:
@@ -88,6 +88,13 @@ def ct_extract(path=None, doc_id = None):
         extracted_data['brief_title'] = brief_title
     except:
         extracted_data['brief_title'] = None
+
+    # official_title
+    try:
+        official_title = root.find('official_title').text
+        extracted_data['official_title'] = brief_title
+    except:
+        extracted_data['official_title'] = None
 
     # brief_summary
     try:
@@ -103,13 +110,6 @@ def ct_extract(path=None, doc_id = None):
     except:
         extracted_data['detailed_description'] = None
 
-    # overall_status
-    try:
-        overall_status = root.find('overall_status').text
-        extracted_data['overall_status'] = overall_status
-    except:
-        extracted_data['overall_status'] = None
-
     # condition
     try:
         condition = root.find('condition').text
@@ -117,52 +117,39 @@ def ct_extract(path=None, doc_id = None):
     except:
         extracted_data['condition'] = None
 
-    # eligibility
+    # criteria
     try:
-        eligibility = root.find('eligibility').find('criteria').find('textblock').text
-        extracted_data['eligibility'] = eligibility
+        criteria = root.find('criteria').find('textblock').text
+        extracted_data['criteria'] = criteria
     except:
-        extracted_data['eligibility'] = None
-
+        extracted_data['criteria'] = None
+        
     # gender
     try:
         gender = root.find('eligibility').find('gender').text
-        extracted_data['gender'] = gender
+        extracted_data['gender'] = str.lower(gender)
     except:
         extracted_data['gender'] = None
 
-    # gender_based
+    # minimum_age = 0
+    minimum_age = root.find('eligibility').find('minimum_age').text
     try:
-        gender_based = root.find('eligibility').find('gender_based').text
-        extracted_data['gender_based'] = gender_based
+        extracted_data['minimum_age'] = int(minimum_age.split(' ')[0])
     except:
-        extracted_data['gender_based'] = None
-
-    # minimum_agect = 0
-    try:
-        minimum_age = root.find('eligibility').find('minimum_age').text
-        try:
-            extracted_data['minimum_age'] = int(minimum_age.split(' ')[0])
-        except:
-            extracted_data['minimum_age'] = 0
-    except:
-        extracted_data['minimum_age'] = None
+        extracted_data['minimum_age'] = 0
 
     # maximum_age
+    maximum_age = root.find('eligibility').find('maximum_age').text
     try:
-        maximum_age = root.find('eligibility').find('maximum_age').text
-        try:
-            extracted_data['maximum_age'] = int(maximum_age.split(' ')[0])
-        except:
-            extracted_data['maximum_age'] = 99
+        extracted_data['maximum_age'] = int(maximum_age.split(' ')[0])
     except:
-        extracted_data['maximum_age'] = None
+        extracted_data['maximum_age'] = 99
 
     # keyword
     try:
         keyword = root.findall('keyword')
         for index, item in enumerate(keyword):
-            keyword_list.append(item.text)
+            keyword_list.append(str.lower(item.text))
         extracted_data['keyword'] = keyword_list
     except:
         extracted_data['keyword'] = None
@@ -171,7 +158,7 @@ def ct_extract(path=None, doc_id = None):
     try:
         mesh_term = root.find('condition_browse').findall('mesh_term')
         for index, item in enumerate(mesh_term):
-            mesh_term_list.append(item.text)
+            mesh_term_list.append(str.lower(item.text))
         extracted_data['mesh_term'] = mesh_term_list
     except:
         extracted_data['mesh_term'] = None

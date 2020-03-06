@@ -38,12 +38,12 @@ EOF
 ####下载数据
 wget http://www.trec-cds.org/clinical_trials.0.tar.gz -P ./data/ClinicalTrials
 tar -xvf ./data/ClinicalTrials/clinical_trials.0.tar.gz -C ./data/ClinicalTrials
-#wget http://www.trec-cds.org/clinical_trials.1.tar.gz -P ./data/ClinicalTrials
-#tar -xvf ./data/ClinicalTrials/clinical_trials.1.tar.gz -C ./data/ClinicalTrials
-#wget http://www.trec-cds.org/clinical_trials.2.tar.gz -P ./data/ClinicalTrials
-#tar -xvf ./data/ClinicalTrials/clinical_trials.2.tar.gz -C ./data/ClinicalTrials
-#wget http://www.trec-cds.org/clinical_trials.3.tar.gz -P ./data/ClinicalTrials
-#tar -xvf ./data/ClinicalTrials/clinical_trials.3.tar.gz -C ./data/ClinicalTrials
+wget http://www.trec-cds.org/clinical_trials.1.tar.gz -P ./data/ClinicalTrials
+tar -xvf ./data/ClinicalTrials/clinical_trials.1.tar.gz -C ./data/ClinicalTrials
+wget http://www.trec-cds.org/clinical_trials.2.tar.gz -P ./data/ClinicalTrials
+tar -xvf ./data/ClinicalTrials/clinical_trials.2.tar.gz -C ./data/ClinicalTrials
+wget http://www.trec-cds.org/clinical_trials.3.tar.gz -P ./data/ClinicalTrials
+tar -xvf ./data/ClinicalTrials/clinical_trials.3.tar.gz -C ./data/ClinicalTrials
 
 ####增加系统用户es
 adduser es

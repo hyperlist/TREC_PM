@@ -10,4 +10,4 @@ echo "Calculating Precision"
 cd trec_eval.9.0
 make clean
 make
-./trec_eval ../data/ClinicalTrials/qrels-final-trials.txt ../qresults/results.txt
+./trec_eval ../data/ClinicalTrials/qrels-final-trials.txt ../qresults/results.txt > ../res.log
