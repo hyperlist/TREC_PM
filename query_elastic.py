@@ -78,11 +78,10 @@ def save_ct_result():
     rank_ctr = 1
     for item in topics:
         res,max_score = ct_query(item)
-        print("query item : ",item['tnum'])
         with open('qresults/ct_results.txt', 'a') as op_file:
             for i in res:
                 op_file.write(
-                    '{}\tQ0\t{}\t{}\t{}\myrun\n'.format(
+                    '{}\tQ0\t{}\t{}\t{}\tmyrun\n'.format(
                         item['tnum'], i['_source']['nct_id'], rank_ctr, round(i['_score'] / max_score, 4)))
                 rank_ctr += 1
         print(item['tnum']," : finish_writing")
