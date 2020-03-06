@@ -23,6 +23,7 @@ def extract_ct_xml(kernel_index):
         try:
             extracted_data = DataManager.ct_extract(path=input_file)
         except Exception as e:
+            print(input_file)
             print('Error Message:', e)
         ct_index(ctr, extracted_data)
         ctr = ctr + 1
