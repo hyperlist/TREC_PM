@@ -72,9 +72,11 @@ def ct_extract(path=None, doc_id = None):
         raise Exception("file not exit!")
     
     # create xml tree
-    tree = ET.parse(file_list[0])
+    tree = ET.parse(file_path)
     root = tree.getroot()
     extracted_data = collections.OrderedDict()
+    keyword_list = []
+    mesh_term_list = []
     # nct_id
     try:
         nct_id = root.find('id_info').find('nct_id').text
@@ -167,4 +169,4 @@ def ct_extract(path=None, doc_id = None):
     return extracted_data
 
 if __name__ == '__main__':
-    extract_query_xml()
+    ct_extract(doc_id='')
