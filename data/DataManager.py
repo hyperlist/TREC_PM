@@ -94,7 +94,7 @@ def ct_extract(path=None, doc_id = None):
     # official_title
     try:
         official_title = root.find('official_title').text
-        extracted_data['official_title'] = brief_title
+        extracted_data['official_title'] = official_title
     except:
         extracted_data['official_title'] = None
 
