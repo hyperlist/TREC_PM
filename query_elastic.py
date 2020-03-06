@@ -66,7 +66,7 @@ def ct_query(extracted_data):
     }, size=1500)
     
     print(res['hits']["total"],res['hits']["max_score"])
-    return res['hits']['hits']
+    return res['hits']['hits'],res['hits']["max_score"]
     
 def show_result(res):
     print('nct_id:{}\t relevance score:{}\n'
@@ -77,7 +77,7 @@ def save_ct_result():
     topics = DataManager.extract_query_xml()
     rank_ctr = 1
     for item in topics:
-        res = ct_query(item)
+        res,max_score = ct_query(item)
         print("query item : ",item['tnum'])
         with open('qresults/ct_results.txt', 'a') as op_file:
             for i in res:
