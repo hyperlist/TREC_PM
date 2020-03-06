@@ -59,16 +59,7 @@ def ct_query(extracted_data):
                           }
                         }
                       }
-                    },
-                    {
-                      "match": {
-                        "criteria": {
-                          "query": other,
-                          "boost": -2
-                        }
-                      }
                     }
-
                 ]
             }
         },
