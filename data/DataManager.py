@@ -134,15 +134,15 @@ def ct_extract(path=None, doc_id = None):
         extracted_data['gender'] = None
 
     # minimum_age = 0
-    minimum_age = root.find('eligibility').find('minimum_age').text
     try:
+        minimum_age = root.find('eligibility').find('minimum_age').text
         extracted_data['minimum_age'] = int(minimum_age.split(' ')[0])
     except:
         extracted_data['minimum_age'] = 0
 
     # maximum_age
-    maximum_age = root.find('eligibility').find('maximum_age').text
     try:
+        maximum_age = root.find('eligibility').find('maximum_age').text
         extracted_data['maximum_age'] = int(maximum_age.split(' ')[0])
     except:
         extracted_data['maximum_age'] = 99
