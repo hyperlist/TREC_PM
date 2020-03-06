@@ -20,11 +20,7 @@ def extract_ct_xml(kernel_index):
     print(len(list_of_files))
     ctr = ctr_list[kernel_index]
     for input_file in list_of_files:
-        try:
-            extracted_data = DataManager.ct_extract(path=input_file)
-        except Exception as e:
-            print(input_file)
-            print('Error Message:', e)
+        extracted_data = DataManager.ct_extract(path=input_file)
         ct_index(ctr, extracted_data)
         ctr = ctr + 1
         if(ctr%300==0):

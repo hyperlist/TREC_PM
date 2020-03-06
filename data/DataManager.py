@@ -82,7 +82,7 @@ def ct_extract(path=None, doc_id = None):
         nct_id = root.find('id_info').find('nct_id').text
         extracted_data['nct_id'] = nct_id
     except:
-        extracted_data['nct_id'] = doc_id
+        extracted_data['nct_id'] = None
 
     # brief_title
     try:
@@ -151,7 +151,7 @@ def ct_extract(path=None, doc_id = None):
     try:
         keyword = root.findall('keyword')
         for index, item in enumerate(keyword):
-            keyword_list.append(str.lower(item.text))
+            keyword_list.append(item.text)
         extracted_data['keyword'] = keyword_list
     except:
         extracted_data['keyword'] = None
@@ -160,7 +160,7 @@ def ct_extract(path=None, doc_id = None):
     try:
         mesh_term = root.find('condition_browse').findall('mesh_term')
         for index, item in enumerate(mesh_term):
-            mesh_term_list.append(str.lower(item.text))
+            mesh_term_list.append(item.text)
         extracted_data['mesh_term'] = mesh_term_list
     except:
         extracted_data['mesh_term'] = None
