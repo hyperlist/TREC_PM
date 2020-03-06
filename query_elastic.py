@@ -8,18 +8,17 @@ def ct_query(extracted_data):
     gene = extracted_data['gene']
     age = int(extracted_data['age'])
     gender = extracted_data['gender']
-    other = extracted_data['other']
     if extracted_data['other'] != 'None':
-        aux = extracted_data['other']
+        other = extracted_data['other']
     else:
-        aux = None
+        other = None
 
     res = es.search(index='ct', body={
         "query": {
             "bool": {
                 "must": [
-                    {"multi_match":{"query":gene,"fields":field,"boost":2}},
                     {"multi_match":{"query":disease,"fields":field,"boost":2}},
+                    {"multi_match":{"query":gene,"fields":field,"boost":2}},
                     {"match":{"gender":gender}},
                     {"range":{"minimum_age":{"lte":age}}},
                     {"range":{"maximum_age":{"gte":age}}},
@@ -30,7 +29,7 @@ def ct_query(extracted_data):
                         "should": {
                           "multi_match": {
                             "query": "cancer carcinoma tumor",
-                            "fields": fields,
+                            "fields": field,
                             "tie_breaker": 0.3,
                             "type": "best_fields"
                           }
@@ -42,7 +41,7 @@ def ct_query(extracted_data):
                         "should": {
                           "multi_match": {
                             "query": "gene genotype DNA base",
-                            "fields": fields,
+                            "fields": field,
                             "tie_breaker": 0.3,
                             "type": "best_fields"
                           }
@@ -54,7 +53,7 @@ def ct_query(extracted_data):
                         "should": {
                           "multi_match": {
                             "query": "surgery therapy treatment prognosis prognostic survival patient resistance recurrence targets malignancy study therapeutical outcome",
-                            "fields": fields,
+                            "fields": field,
                             "tie_breaker": 0.3,
                             "type": "best_fields"
                           }
