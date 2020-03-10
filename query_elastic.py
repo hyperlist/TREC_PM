@@ -30,12 +30,14 @@ def ct_query(extracted_data):
     temp = temp.replace('{{[geneDescriptions]}}',str(geneDescriptions))
 
     query = json.loads(temp)
-    r = es.search(index='ct', body=query, size=1500,request_timeout=120)
+    r = es.search(index='ct', body=query, size=500,request_timeout=120)
     #print(res['hits']["total"],res['hits']["max_score"])
     return r
         
 def save_ct_result():
     topics = DataManager.extract_query_extension()
+    f = open('qresults/ct_results.txt', 'w')
+    f.close()
     for item in topics:
         rank_ctr = 1
         print('query topic: ',item['tnum'], ' disease: ', item['disease'])
