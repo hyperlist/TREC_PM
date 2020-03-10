@@ -47,7 +47,8 @@ def save_ct_result():
             for i in res:
                 op_file.write('{}\tQ0\t{}\t{}\t{}\tmyrun\n'.format(item['tnum'], i['_source']['nct_id'], rank_ctr, round(i['_score'] / max_score, 4)))
                 rank_ctr += 1
-        print(item['tnum']," spend time :", time.time() - starttime, 'total is : ', num)
+        print(item['tnum']," spend time :", time.time() - starttime)
+        print('total is : ', num, 'ac number is ', len(res))
         
 def show_result(r):
     max_score = r['hits']["max_score"]
