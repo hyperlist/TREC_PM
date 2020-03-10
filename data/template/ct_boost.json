@@ -1,4 +1,5 @@
 {
+"query":{
 	"bool": {
 		"must": [
 			{{clinical_trials/age.json}},
@@ -17,4 +18,5 @@
 			{{clinical_trials/non_melanoma.json}}
 		]
 	}
+}
 }
