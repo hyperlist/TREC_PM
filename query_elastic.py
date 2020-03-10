@@ -22,9 +22,9 @@ def ct_query(extracted_data):
     temp = temp.replace('{{disease}}',disease)
     temp = temp.replace('{{sex}}',sex)
     temp = temp.replace('{{other}}',str(other))
-    seq = '","'
+    seq = ' '
     temp = temp.replace('{{diseasePreferredTerm}}', str(diseasePreferredTerm))
-    temp = temp.replace('"{{[diseaseSynonyms]}}"','["'+seq.join(diseaseSynonyms)+'"]')
+    temp = temp.replace('"{{[diseaseSynonyms]}}"','"'+seq.join(diseaseSynonyms)+'"')
     temp = temp.replace('"{{[diseaseHypernyms]}}"','["'+seq.join(diseaseHypernyms)+'"]')
     #temp = temp.replace('{{[customDiseaseExpansions]}}',str(diseaseSynonyms))     #customDiseaseExpansions
     temp = temp.replace('"{{[geneSynonyms]}}"','["'+seq.join(geneSynonyms)+'"]')
