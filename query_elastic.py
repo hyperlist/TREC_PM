@@ -38,7 +38,7 @@ def save_ct_result():
     topics = DataManager.extract_query_extension()
     rank_ctr = 1
     for item in topics:
-        print('query topic: ',item['tnum'], ' disease: ', item['disease')
+        print('query topic: ',item['tnum'], ' disease: ', item['disease'])
         starttime = time.time()
         r = ct_query(item)
         max_score = r['hits']["max_score"]
