@@ -1,8 +1,8 @@
 import elasticsearch
 import json,re,time
 from data import DataManager
-
-def ct_query(extracted_data):
+    
+def get_ct_query(extracted_data, name):
     disease = extracted_data['disease']
     gene = extracted_data['gene']
     age = extracted_data['age']
@@ -15,7 +15,7 @@ def ct_query(extracted_data):
     geneDescriptions = extracted_data['geneDescriptions']
     #获取查询模板
     seq = " "
-    temp = DataManager.matchval('ct_boost.json')
+    temp = DataManager.readtemp(name)
     temp = temp.replace('"{{age}}"',str(age))
     temp = temp.replace('{{gene}}',gene)
     temp = temp.replace('{{disease}}',disease)
@@ -31,10 +31,16 @@ def ct_query(extracted_data):
     temp = temp.replace('{{[geneSynonyms]}}',seq.join(geneSynonyms))
     #temp = temp.replace('{{[geneHypernyms]}}',str(geneSynonyms))
     #temp = temp.replace('{{[customGeneExpansions]}}',str(geneSynonyms))
+    #print(re.findall(r'{{(.*)}}',temp))
     #l = temp.split('\n')
     #for i in range(len(l)):
     #    print(i," ", l[i])
-    query = json.loads(temp)
+    return json.loads(temp)
+    
+#curl -XGET 'http://localhost:9200/ct/xml/_validate/query?explain' -H 'Content-Type: application/json' -d @test.txt
+def ct_query(extracted_data):
+    name = 'ct_phrase.json'
+    query = get_ct_query(extracted_data, name)
     #print(query)
     r = es.search(index='ct', body=query, size=500,request_timeout=120)
     print(res['hits']["total"],res['hits']["max_score"])

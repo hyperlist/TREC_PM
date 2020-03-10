@@ -1,8 +1,0 @@
-{
-  "multi_match": {
-    "query": "{{sex}}",
-    "fields": ["gender"],
-    "tie_breaker": 0.3,
-    "boost": {{sex_boost}}
-  }
-}

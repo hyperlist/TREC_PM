@@ -22,7 +22,6 @@
       },
       {{clinical_trials/disease_synonym_phrase.json}},
       {{clinical_trials/disease_hypernym.json}},
-      {{clinical_trials/custom_disease.json}},
       {{match_all.json}}
     ]
   }
