@@ -28,9 +28,9 @@ def ct_query(extracted_data):
     temp = temp.replace('{{[geneHypernyms]}}',str(geneSynonyms))
     temp = temp.replace('{{[customGeneExpansions]}}',str(geneSynonyms))
     temp = temp.replace('{{[geneDescriptions]}}',str(geneDescriptions))
-    
+
     query = json.loads(temp)
-    r = es.search(index='ct', body=query, size=2000)
+    r = es.search(index='ct', body=query, size=2000,timeout=120)
     #print(res['hits']["total"],res['hits']["max_score"])
     return r
         
@@ -40,12 +40,7 @@ def save_ct_result():
     for item in topics:
         print('query topic: ',item['tnum'], ' disease: ', item['disease'])
         starttime = time.time()
-        try:
-            r = ct_query(item)
-            time.sleep(5)
-        except:
-            time.sleep(5)
-            r = ct_query(item)
+        r = ct_query(item)
         max_score = r['hits']["max_score"]
         num = r['hits']["total"]
         res = r['hits']['hits']
