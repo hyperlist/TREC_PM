@@ -1,6 +1,5 @@
 import elasticsearch
 import json,re,time
-import sys
 from data import DataManager
 
 def ct_query(extracted_data):
@@ -16,24 +15,24 @@ def ct_query(extracted_data):
     geneDescriptions = extracted_data['geneDescriptions']
     #获取查询模板
     temp = DataManager.matchval('ct_boost.json')
-    
     temp = temp.replace('"{{age}}"',str(age))
     temp = temp.replace('{{gene}}',gene)
     temp = temp.replace('{{disease}}',disease)
     temp = temp.replace('{{sex}}',sex)
     temp = temp.replace('{{other}}',str(other))
-    seq = ' '
     temp = temp.replace('{{diseasePreferredTerm}}', str(diseasePreferredTerm))
-    temp = temp.replace('"{{[diseaseSynonyms]}}"','"'+seq.join(diseaseSynonyms)+'"')
-    temp = temp.replace('"{{[diseaseHypernyms]}}"','["'+seq.join(diseaseHypernyms)+'"]')
+    temp = temp.replace('{{[diseaseSynonyms]}}',str(diseaseSynonyms))
+    temp = temp.replace('{{[diseaseHypernyms]}}',str(diseaseHypernyms))
     #temp = temp.replace('{{[customDiseaseExpansions]}}',str(diseaseSynonyms))     #customDiseaseExpansions
-    temp = temp.replace('"{{[geneSynonyms]}}"','["'+seq.join(geneSynonyms)+'"]')
+    temp = temp.replace('{{[geneSynonyms]}}',str(geneSynonyms))
     #temp = temp.replace('{{[geneHypernyms]}}',str(geneSynonyms))
     #temp = temp.replace('{{[customGeneExpansions]}}',str(geneSynonyms))
-    temp = temp.replace('"{{[geneDescriptions]}}"','["'+seq.join(geneDescriptions)+'"]')
-    
+    temp = temp.replace('{{[geneDescriptions]}}',str(geneDescriptions))
+    l = temp.split('\n')
+    for i in l:
+        print(i)
     query = json.loads(temp)
-    print(query)
+    #print(query)
     r = es.search(index='ct', body=query, size=500,request_timeout=120)
     #print(res['hits']["total"],res['hits']["max_score"])
     return r
