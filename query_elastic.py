@@ -36,15 +36,15 @@ def ct_query(extracted_data):
         
 def save_ct_result():
     topics = DataManager.extract_query_extension()
-    rank_ctr = 1
     for item in topics:
+        rank_ctr = 1
         print('query topic: ',item['tnum'], ' disease: ', item['disease'])
         starttime = time.time()
         r = ct_query(item)
         max_score = r['hits']["max_score"]
         num = r['hits']["total"]
         res = r['hits']['hits']
-        with open('qresults/ct_results.txt', 'w') as op_file:
+        with open('qresults/ct_results.txt', 'a') as op_file:
             for i in res:
                 op_file.write('{}\tQ0\t{}\t{}\t{}\tmyrun\n'.format(item['tnum'], i['_source']['nct_id'], rank_ctr, round(i['_score'] / max_score, 4)))
                 rank_ctr += 1
