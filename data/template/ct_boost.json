@@ -12,7 +12,6 @@
 			{{clinical_trials/dna.json}},
 			{{clinical_trials/positive_boosters.json}},
 			{{clinical_trials/other.json}},
-			{{clinical_trials/structured.json}}
 		],
 		"must_not": [
 			{{clinical_trials/non_melanoma.json}}

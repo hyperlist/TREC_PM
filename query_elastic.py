@@ -23,13 +23,13 @@ def ct_query(extracted_data):
     temp = temp.replace('{{diseasePreferredTerm}}', str(diseasePreferredTerm))
     temp = temp.replace('{{[diseaseSynonyms]}}',str(diseaseSynonyms))
     temp = temp.replace('{{[diseaseHypernyms]}}',str(diseaseHypernyms))
-    temp = temp.replace('{{[customDiseaseExpansions]}}',str(diseaseSynonyms))     #customDiseaseExpansions
+    #temp = temp.replace('{{[customDiseaseExpansions]}}',str(diseaseSynonyms))     #customDiseaseExpansions
     temp = temp.replace('{{[geneSynonyms]}}',str(geneSynonyms))
-    temp = temp.replace('{{[geneHypernyms]}}',str(geneSynonyms))
-    temp = temp.replace('{{[customGeneExpansions]}}',str(geneSynonyms))
+    #temp = temp.replace('{{[geneHypernyms]}}',str(geneSynonyms))
+    #temp = temp.replace('{{[customGeneExpansions]}}',str(geneSynonyms))
     temp = temp.replace('{{[geneDescriptions]}}',str(geneDescriptions))
-
     query = json.loads(temp)
+    print(query)
     r = es.search(index='ct', body=query, size=500,request_timeout=120)
     #print(res['hits']["total"],res['hits']["max_score"])
     return r
