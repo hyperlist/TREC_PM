@@ -41,7 +41,7 @@ def get_ct_query(extracted_data, name):
 def ct_query(extracted_data):
     name = 'ct_phrase.json'
     query = get_ct_query(extracted_data, name)
-    #print(query)
+    print(query)
     r = es.search(index='ct', body=query, size=500,request_timeout=120)
     print(res['hits']["total"],res['hits']["max_score"])
     return r
