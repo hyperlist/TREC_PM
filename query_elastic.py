@@ -40,7 +40,12 @@ def save_ct_result():
     for item in topics:
         print('query topic: ',item['tnum'], ' disease: ', item['disease'])
         starttime = time.time()
-        r = ct_query(item)
+        try:
+            r = ct_query(item)
+            time.sleep(5)
+        except:
+            time.sleep(5)
+            r = ct_query(item)
         max_score = r['hits']["max_score"]
         num = r['hits']["total"]
         res = r['hits']['hits']
@@ -49,7 +54,7 @@ def save_ct_result():
                 op_file.write('{}\tQ0\t{}\t{}\t{}\tmyrun\n'.format(item['tnum'], i['_source']['nct_id'], rank_ctr, round(i['_score'] / max_score, 4)))
                 rank_ctr += 1
         print(item['tnum']," spend time :", time.time() - starttime)
-        time.sleep(2)
+        
         print('total is : ', num, 'ac number is ', len(res))
         
 def show_result(r):
