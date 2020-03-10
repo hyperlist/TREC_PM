@@ -5,7 +5,8 @@ BASE_PATH=$(pwd)
 source activate python3
 pip install nltk urllib3
 pip install elasticsearch
-
+python xml_to_elastic.py
+python query_elastic.py
 echo "Calculating Precision"
 cd trec_eval.9.0
 make clean

@@ -33,13 +33,6 @@ def ct_query(extracted_data):
     r = es.search(index='ct', body=query, size=2000)
     #print(res['hits']["total"],res['hits']["max_score"])
     return r
-    
-def show_result(r):
-    max_score = r['hits']["max_score"]
-    res = r['hits']['hits']
-    print('nct_id:{}\t relevance score:{}\n'
-              .format(i['_source']['nct_id'], round(res[0]['_score'] / max_score, 4)))
-    print(res[0]['_source']['brief_title'])
         
 def save_ct_result():
     topics = DataManager.extract_query_extension()
@@ -55,9 +48,15 @@ def save_ct_result():
                 op_file.write('{}\tQ0\t{}\t{}\t{}\tmyrun\n'.format(item['tnum'], i['_source']['nct_id'], rank_ctr, round(i['_score'] / max_score, 4)))
                 rank_ctr += 1
         print(item['tnum']," spend time :", time.time() - starttime, 'total is : ', num)
+        
+def show_result(r):
+    max_score = r['hits']["max_score"]
+    res = r['hits']['hits']
+    print('nct_id:{}\t relevance score:{}\n'
+              .format(i['_source']['nct_id'], round(res[0]['_score'] / max_score, 4)))
+    print(res[0]['_source']['brief_title'])
     
 def intersection_query():
-    #topics = DataManager.extract_query_xml()
     topics = DataManager.extract_query_extension()
     while 1:
         temp = input("Enter the topic number you want to search 1~30, Enter 'q' to quit: ")
@@ -74,6 +73,6 @@ if __name__ == '__main__':
         print('Error Message:', e, '\n')
         raise Exception("\nCannot connect to Elasticsearch!")
     # Call the function to start extracting the queries
-    #save_ct_result()
-    intersection_query()
+    save_ct_result()
+    #intersection_query()
     

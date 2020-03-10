@@ -1,12 +1,10 @@
 [
   "brief_title^2",
   "official_title",
-  "summary",
-  "description",
-  "outcomeMeasures",
-  "outcomeDescriptions",
+  "brief_summary",
+  "detailed_description",
   "conditions",
-  "inclusion",
-  "keywords",
-  "meshTags"
+  "criteria",
+  "keyword",
+  "mesh_term"
 ]
