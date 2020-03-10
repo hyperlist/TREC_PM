@@ -30,7 +30,7 @@ def ct_query(extracted_data):
     temp = temp.replace('{{[geneDescriptions]}}',str(geneDescriptions))
 
     query = json.loads(temp)
-    r = es.search(index='ct', body=query, size=2000,timeout=120)
+    r = es.search(index='ct', body=query, size=2000,request_timeout=120)
     #print(res['hits']["total"],res['hits']["max_score"])
     return r
         
