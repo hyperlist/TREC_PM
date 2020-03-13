@@ -91,16 +91,16 @@ def ct_extract(path=None, doc_id = None):
     # nct_id
     try:
         nct_id = root.find('id_info').find('nct_id').text
-        extracted_data['nct_id'] = nct_id
+        extracted_data['id'] = nct_id
     except:
-        extracted_data['nct_id'] = None
+        extracted_data['id'] = None
 
     # brief_title
     try:
         brief_title = root.find('brief_title').text
-        extracted_data['brief_title'] = brief_title
+        extracted_data['title'] = brief_title
     except:
-        extracted_data['brief_title'] = None
+        extracted_data['title'] = None
 
     # official_title
     try:
@@ -112,9 +112,9 @@ def ct_extract(path=None, doc_id = None):
     # brief_summary
     try:
         brief_summary = root.find('brief_summary').find('textblock').text
-        extracted_data['brief_summary'] = brief_summary
+        extracted_data['summary'] = brief_summary
     except:
-        extracted_data['brief_summary'] = None
+        extracted_data['summary'] = None
 
     # detailed_description
     try:
@@ -133,16 +133,18 @@ def ct_extract(path=None, doc_id = None):
     # criteria
     try:
         criteria = root.find('eligibility').find('criteria').find('textblock').text
-        extracted_data['criteria'] = criteria.replace('\r\n',' ').replace('\n',' ').replace('  ',' ')
+        extracted_data['inclusion'] = criteria.replace('\r\n',' ').replace('\n',' ').replace('  ',' ')
     except:
-        extracted_data['criteria'] = None
+        extracted_data['inclusion'] = None
         
     # gender
     try:
-        gender = root.find('eligibility').find('gender').text
-        extracted_data['gender'] = str.lower(gender)
+        gender = str.lower(root.find('eligibility').find('gender').text)
+        extracted_data['sex'] = gender
+        if gender=="all":
+            extracted_data['sex'] = "male female"
     except:
-        extracted_data['gender'] = None
+        extracted_data['sex'] = "male female"
 
     # minimum_age = 0
     try:
@@ -178,29 +180,29 @@ def ct_extract(path=None, doc_id = None):
     # print(extracted_data)
     return extracted_data
 
-def readtemp(filename):
+def read_temp(filename):
     file_path = data_root + "/template/"
     file = glob.glob(file_path+filename)[0]
     temp = open(file,mode='r',encoding='utf-8').read()
-    temp = matchsubtemp(temp)
+    temp = match_subtemp(temp)
     #print(temp)
     return temp
     
-def matchsubtemp(temp):
+def match_subtemp(temp):
     file_path = data_root + "/template/"
     sublist = re.findall(r'{{(.*)}}',temp)
     for item in sublist:
         file = glob.glob(file_path+item)
         if(len(file) == 1):
             #print(item)
-            subtemp = readtemp(item)
+            subtemp = read_temp(item)
             #print('{{'+item+'}}')
             temp = temp.replace('{{'+item+'}}',subtemp)
             #temp = temp.replace('\r\n','').replace('\t','').replace('\n','').replace('  ','')
     return temp
 
-def matchval(name):
-    str = readtemp(name)
+def get_template(name):
+    str = read_temp(name)
     return str
 
 

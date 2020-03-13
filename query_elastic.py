@@ -2,7 +2,7 @@ import elasticsearch
 import json,re,time
 from data import DataManager
     
-def get_ct_query(extracted_data, name):
+def construct_ct_query(extracted_data, name):
     disease = extracted_data['disease']
     gene = extracted_data['gene']
     age = extracted_data['age']
@@ -13,9 +13,10 @@ def get_ct_query(extracted_data, name):
     diseaseHypernyms = extracted_data['diseaseHypernyms']
     geneSynonyms = extracted_data['geneSynonyms']
     geneDescriptions = extracted_data['geneDescriptions']
+    
     #获取查询模板
     seq = " "
-    temp = DataManager.readtemp(name)
+    temp = DataManager.get_template(name)
     temp = temp.replace('"{{age}}"',str(age))
     temp = temp.replace('{{gene}}',gene)
     temp = temp.replace('{{disease}}',disease)
@@ -38,40 +39,27 @@ def get_ct_query(extracted_data, name):
     return json.loads(temp)
     
 #curl -XGET 'http://localhost:9200/ct/xml/_validate/query?explain' -H 'Content-Type: application/json' -d @test.txt
-def ct_query(extracted_data):
-    name = 'ct_phrase.json'
-    query = get_ct_query(extracted_data, name)
-    print(query)
+def ct_query(extracted_data,template):
+    query = construct_ct_query(extracted_data, template)
+    #print(query)
     r = es.search(index='ct', body=query, size=500,request_timeout=120)
-    print(res['hits']["total"],res['hits']["max_score"])
-    return r
+    print('total is : ', r['hits']["total"], 'ac number is ', len(r['hits']['hits']))
+    return r['hits']['hits']
         
-def save_ct_result():
+def save_ct_result(template):
     topics = DataManager.extract_query_extension()
-    f = open('qresults/ct_results.txt', 'w')
-    f.close()
+    op_file = open('qresults/ct_results.txt', 'w')
     for item in topics:
         rank_ctr = 1
         print('query topic: ',item['tnum'], ' disease: ', item['disease'])
         starttime = time.time()
-        r = ct_query(item)
-        max_score = r['hits']["max_score"]
-        num = r['hits']["total"]
-        res = r['hits']['hits']
-        with open('qresults/ct_results.txt', 'a') as op_file:
-            for i in res:
-                op_file.write('{}\tQ0\t{}\t{}\t{}\tmyrun\n'.format(item['tnum'], i['_source']['nct_id'], rank_ctr, round(i['_score'] / max_score, 4)))
-                rank_ctr += 1
+        res = ct_query(item,template)
+        for i in res:
+            op_file.write('{}\tQ0\t{}\t{}\t{}\tbaseline\n'.format(item['tnum'], i['_source']['nct_id'], rank_ctr, round(i['_score'], 4)))
+            rank_ctr += 1
         print(item['tnum']," spend time :", time.time() - starttime)
-        
-        print('total is : ', num, 'ac number is ', len(res))
-        
-def show_result(r):
-    max_score = r['hits']["max_score"]
-    res = r['hits']['hits']
-    print('nct_id:{}\t relevance score:{}\n'
-              .format(i['_source']['nct_id'], round(res[0]['_score'] / max_score, 4)))
-    print(res[0]['_source']['brief_title'])
+    op_file.close()
+    
     
 def intersection_query():
     topics = DataManager.extract_query_extension()
@@ -80,10 +68,16 @@ def intersection_query():
         if temp == "q":
             break
         idx = int(temp) - 1
-        r = ct_query(topics[idx])
-        show_result(r)
+        res = ct_query(topics[idx])
+        print(res[0]['_source']['nct_id'], res[0]['_score'])
+        print(res[1]['_source']['nct_id'], res[1]['_score'])
+        print(res[2]['_source']['nct_id'], res[2]['_score'])
     
 if __name__ == '__main__':
+    if sys.argv[1] != None:
+        template = sys.argv[1]
+    else:
+        template = 'BASE.json'
     try:
         es = elasticsearch.Elasticsearch([{'host': 'localhost', 'port': 9200}])
     except Exception as e:
@@ -91,5 +85,5 @@ if __name__ == '__main__':
         raise Exception("\nCannot connect to Elasticsearch!")
     # Call the function to start extracting the queries
     save_ct_result()
-    #intersection_query()
+    intersection_query()
     
