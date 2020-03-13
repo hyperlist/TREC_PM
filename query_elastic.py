@@ -1,5 +1,5 @@
 import elasticsearch
-import json,re,time
+import json,re,time,sys
 from data import DataManager
     
 def construct_ct_query(extracted_data, name):
