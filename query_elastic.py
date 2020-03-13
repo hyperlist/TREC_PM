@@ -74,16 +74,15 @@ def intersection_query():
         print(res[2]['_source']['nct_id'], res[2]['_score'])
     
 if __name__ == '__main__':
-    if sys.argv[1] != None:
-        template = sys.argv[1]
-    else:
-        template = 'BASE.json'
+    
+    template = 'BASE.json'
+    
     try:
         es = elasticsearch.Elasticsearch([{'host': 'localhost', 'port': 9200}])
     except Exception as e:
         print('Error Message:', e, '\n')
         raise Exception("\nCannot connect to Elasticsearch!")
     # Call the function to start extracting the queries
-    save_ct_result()
+    save_ct_result(template)
     intersection_query()
     
