@@ -15,7 +15,7 @@ make clean
 make
 cd ../
 #2019
-./trec_eval-9.0/trec_eval ./data/ClinicalTrials/qrels-treceval-trials.38.txt ./qresults/ct-expand.txt
-./trec_eval-9.0/trec_eval ./data/ClinicalTrials/qrels-treceval-trials.38.txt ./qresults/ct-expand.txt > ./qresults/ct-expand.log
+./trec_eval-9.0/trec_eval ./data/ClinicalTrials/qrels-treceval-trials.38.txt ./qresults/ct_baseline.txt
+./trec_eval-9.0/trec_eval ./data/ClinicalTrials/qrels-treceval-trials.38.txt ./qresults/ct_baseline.txt > ./qresults/ct_baseline.log
 #2017
 ./trec_eval-9.0/trec_eval ./data/ClinicalTrials/qrels-final-trials.txt ./qresults/results.txt > ./qresults/results.log
