@@ -1,8 +1,8 @@
 import elasticsearch
 import json,re,time,sys
 from data import DataManager
-template = 'ct-expand.json'
-result = 'ct-expand.txt'
+template = 'ct_baseline.json'
+result = 'ct_baseline.txt'
 
 def construct_ct_query(extracted_data):
     disease = extracted_data['disease']
@@ -43,7 +43,7 @@ def construct_ct_query(extracted_data):
 def ct_query(extracted_data):
     query = construct_ct_query(extracted_data)
     #print(query)
-    r = es.search(index='ct', body=query, size=500,request_timeout=120)
+    r = es.search(index='ct', body=query, size=100,request_timeout=120)
     print('total is : ', r['hits']["total"], 'ac number is ', len(r['hits']['hits']))
     return r['hits']['hits']
         
