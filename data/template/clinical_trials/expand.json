@@ -24,7 +24,7 @@
 		"should": [
 			{
 				"multi_match": {
-					"query": "{{disease}} {{diseasePreferredTerm}} {{[diseaseSynonyms]}}",
+					"query": "{{disease}}",
 					"fields": [
 						"title^2",
 						"summary",

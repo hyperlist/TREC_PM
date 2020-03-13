@@ -70,9 +70,9 @@ def intersection_query():
             break
         idx = int(temp) - 1
         res = ct_query(topics[idx])
-        print(res[0]['_source']['nct_id'], res[0]['_score'])
-        print(res[1]['_source']['nct_id'], res[1]['_score'])
-        print(res[2]['_source']['nct_id'], res[2]['_score'])
+        print(res[0]['_source']['id'], res[0]['_score'])
+        print(res[1]['_source']['id'], res[1]['_score'])
+        print(res[2]['_source']['id'], res[2]['_score'])
     
 if __name__ == '__main__':
     

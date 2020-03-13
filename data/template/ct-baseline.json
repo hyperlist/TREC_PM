@@ -1,5 +1,5 @@
 {
 "query":
-    {{clinical_trials/baseline-ct.json}}
+    {{clinical_trials/base.json}}
 
 }
