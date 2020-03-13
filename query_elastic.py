@@ -1,8 +1,8 @@
 import elasticsearch
 import json,re,time,sys
 from data import DataManager
-template = 'ct_baseline.json'
-result = 'ct_baseline.txt'
+template = 'ct_boost.json'
+result = 'ct_boost.txt'
 
 def construct_ct_query(extracted_data):
     disease = extracted_data['disease']
