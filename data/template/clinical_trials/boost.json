@@ -56,7 +56,7 @@
 							"fields": [
 								"title^2",
 								"summary",
-								"inclusion",
+								"inclusion"
 							],
 							"tie_breaker": 0.3,
 							"type": "best_fields"
@@ -72,7 +72,7 @@
 							"fields": [
 								"title^2",
 								"summary",
-								"inclusion",
+								"inclusion"
 							],
 							"tie_breaker": 0.3,
 							"type": "best_fields"
