@@ -1,8 +1,0 @@
-{
-  "match": {
-    "exclusion": {
-      "query": "{{other}}",
-      "boost": -2
-    }
-  }
-}

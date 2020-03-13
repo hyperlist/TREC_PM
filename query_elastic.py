@@ -1,8 +1,8 @@
 import elasticsearch
 import json,re,time,sys
 from data import DataManager
-    
-template = 'BASE.json'
+template = 'ct-expand.json'
+result = 'ct-expand.txt'
 
 def construct_ct_query(extracted_data):
     disease = extracted_data['disease']
@@ -49,14 +49,14 @@ def ct_query(extracted_data):
         
 def save_ct_result():
     topics = DataManager.extract_query_extension()
-    op_file = open('qresults/ct_results.txt', 'w')
+    op_file = open('qresults/'+result, 'w')
     for item in topics:
         rank_ctr = 1
         print('query topic: ',item['tnum'], ' disease: ', item['disease'])
         starttime = time.time()
         res = ct_query(item)
         for i in res:
-            op_file.write('{}\tQ0\t{}\t{}\t{}\tbaseline\n'.format(item['tnum'], i['_source']['nct_id'], rank_ctr, round(i['_score'], 4)))
+            op_file.write('{}\tQ0\t{}\t{}\t{}\tbaseline\n'.format(item['tnum'], i['_source']['id'], rank_ctr, round(i['_score'], 4)))
             rank_ctr += 1
         print(item['tnum']," spend time :", time.time() - starttime)
     op_file.close()
