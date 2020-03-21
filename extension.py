@@ -3,7 +3,7 @@ import pandas
 import time
 import requests
 from urllib.parse import quote
-from data import DataManager
+import DataManager
 
 headers = {
     'authorization': "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdSI6Imx4ZzphcGkiLCJzYyI6WyJrZzpyZWFkIiwiZXh0cmFjdGlvbjpyZWFkIl0sImFpIjoiYXBpOjI2ZmJiY2E1LTQ5NjMtMzg5MC1hZWUzLWIxZTBhY2MzZGQxNiIsInVpIjoidXNlcjo0Yjc3YTYxYS04ODIwLTllMzgtNzk4ZC03OTQ4YWRmOTE3YjciLCJpYXQiOjE1ODMxNDM4OTd9.yCmuudsjWTAcfcixOoEb_IfIsplvRWYDRffUMHJpRng",
