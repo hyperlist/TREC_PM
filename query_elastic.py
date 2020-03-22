@@ -1,11 +1,9 @@
 import elasticsearch
 import json,re,time,sys
 import DataManager
+import os 
 
-template = 'ct_boost.json'
-result = 'ct_boost.txt'
-
-def construct_ct_query(extracted_data):
+def construct_ct_query(template, extracted_data):
     disease = extracted_data['disease']
     gene = extracted_data['gene']
     age = extracted_data['age']
@@ -16,50 +14,47 @@ def construct_ct_query(extracted_data):
     diseaseHypernyms = extracted_data['diseaseHypernyms']
     geneSynonyms = extracted_data['geneSynonyms']
     geneDescriptions = extracted_data['geneDescriptions']
-    
-    #获取查询模板
-    temp = DataManager.get_template(template)
-    
+    #print(template)
     seq = " "
-    temp = temp.replace('{{age}}',str(age))
-    temp = temp.replace('{{gene}}',gene)
-    temp = temp.replace('{{disease}}',disease)
-    temp = temp.replace('{{sex}}',sex)
-    temp = temp.replace('{{other}}',str(other))
-    temp = temp.replace('{{diseasePreferredTerm}}', str(diseasePreferredTerm))
-    temp = temp.replace('{{[geneDescriptions]}}',str(geneDescriptions))
-    temp = temp.replace('{{[diseaseSynonyms]}}',seq.join(diseaseSynonyms))
-    temp = temp.replace('{{[diseaseHypernyms]}}',seq.join(diseaseHypernyms))
-    #temp = temp.replace('{{[customDiseaseExpansions]}}',str(diseaseSynonyms))     #customDiseaseExpansions
-    temp = temp.replace('{{[geneSynonyms]}}',seq.join(geneSynonyms))
-    #temp = temp.replace('{{[geneHypernyms]}}',str(geneSynonyms))
-    #temp = temp.replace('{{[customGeneExpansions]}}',str(geneSynonyms))
+    template = template.replace('{{age}}', str(age))
+    template = template.replace('{{gene}}', gene)
+    template = template.replace('{{disease}}',disease)
+    template = template.replace('{{sex}}',sex)
+    template = template.replace('{{other}}',str(other))
+    template = template.replace('{{diseasePreferredTerm}}', str(diseasePreferredTerm))
+    template = template.replace('{{[geneDescriptions]}}',str(geneDescriptions))
+    template = template.replace('{{[diseaseSynonyms]}}',seq.join(diseaseSynonyms))
+    template = template.replace('{{[diseaseHypernyms]}}',seq.join(diseaseHypernyms))
+    template = template.replace('{{[geneSynonyms]}}',seq.join(geneSynonyms))
     #print(re.findall(r'{{(.*)}}',temp))
     #l = temp.split('\n')
     #for i in range(len(l)):
     #    print(i," ", l[i])
-    return json.loads(temp)
+    return json.loads(template)
     
 #curl -XGET 'http://localhost:9200/ct/xml/_validate/query?explain' -H 'Content-Type: application/json' -d @test.txt
-def ct_query(extracted_data):
-    query = construct_ct_query(extracted_data)
-    #print(query)
-    r = es.search(index='pm', body=query, size=1000,request_timeout=120)
-    print('total is : ', r['hits']["total"], 'ac number is ', len(r['hits']['hits']))
-    return r['hits']['hits']
         
-def save_ct_result():
+def get_ct_result():
+    path = 'template/clinical_trials/'
+    file_list = list(os.listdir(path))
     topics = DataManager.extract_query_extension()
-    op_file = open('qresults/'+result, 'w')
-    for item in topics:
-        rank_ctr = 1
-        print('query topic: ',item['tnum'], ' disease: ', item['disease'])
-        starttime = time.time()
-        res = ct_query(item)
-        for i in res:
-            op_file.write('{}\tQ0\t{}\t{}\t{}\tbaseline\n'.format(item['tnum'], i['_source']['id'], rank_ctr, round(i['_score'], 4)))
-            rank_ctr += 1
-        print(item['tnum']," spend time :", time.time() - starttime)
+    for file in file_list:
+        temp = DataManager.get_template(os.path.join('clinical_trials', file))
+        name = file.split('.')[0]
+        print(re_path)
+        op_file = open('qresults/'+name, 'w')
+        for item in topics:
+            query = construct_ct_query(temp, item)
+            rank_ctr = 1
+            print('query topic: ',item['tnum'], ' disease: ', item['disease'])
+            starttime = time.time()
+            r = es.search(index='ct', body=query, size=1000,request_timeout=120)
+            res = r['hits']['hits']
+            for i in res:
+                op_file.write('{}\tQ0\t{}\t{}\t{}\tbaseline\n'.format(item['tnum'], i['_source']['id'], rank_ctr, round(i['_score'], 4)))
+                rank_ctr += 1
+            print(item['tnum']," spend time :", time.time() - starttime)
+        print(name," finish :")
     op_file.close()
     
     
@@ -84,6 +79,6 @@ if __name__ == '__main__':
         print('Error Message:', e, '\n')
         raise Exception("\nCannot connect to Elasticsearch!")
     # Call the function to start extracting the queries
-    save_ct_result()
-    intersection_query()
+    get_ct_result()
+    #intersection_query()
     

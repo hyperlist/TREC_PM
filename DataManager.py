@@ -1,9 +1,8 @@
 import xml.etree.ElementTree as ET
-import glob 
 import collections
 import os,re
 import json
-import bz2,gzip
+import gzip
 
 data_root='./data'
 
@@ -77,11 +76,9 @@ def ct_extract(path=None, doc_id = None):
         file_path = path
     else:
         file_path = data_root + "/ClinicalTrials/*/*/{}.xml".format(doc_id)
-    file_list = glob.glob(file_path)
-    if len(file_list) != 1:
+    if not os.path.exists(file_path):
         print(file_path)
         raise Exception("file not exit!")
-    file_path = file_list[0]
     # create xml tree
     tree = ET.parse(file_path)
     root = tree.getroot()
@@ -189,11 +186,9 @@ def sa_extract(path=None, doc_id = None):
         file_path = path
     else:
         file_path = data_root + "/ScientificAbstracts/PubMed/{}.xml.gz".format(doc_id)
-    file_list = glob.glob(file_path)
-    if len(file_list) != 1:
+    if not os.path.exists(file_path):
         print(file_path)
         raise Exception("file not exit!")
-    file_path = file_list[0]
     data = []
     file = gzip.open(file_path, "rb").read()
     fstr = bytes.decode(file)
@@ -237,30 +232,33 @@ def sa_extract(path=None, doc_id = None):
 
     return data
 
-def read_temp(filename):
-    file_path = data_root + "/template/"
-    file = glob.glob(file_path+filename)[0]
-    temp = open(file,mode='r',encoding='utf-8').read()
-    temp = match_subtemp(temp)
-    #print(temp)
-    return temp
+#def read_temp(filename):
+#    file_path = "./template/"
+#    file = os.path.join(file_path,filename)
+#    temp = open(file,mode='r',encoding='utf-8').read()
+#    temp = match_subtemp(temp)
+#    #print(temp)
+#    return temp
     
-def match_subtemp(temp):
-    file_path = data_root + "/template/"
-    sublist = re.findall(r'{{(.*)}}',temp)
-    for item in sublist:
-        file = glob.glob(file_path+item)
-        if(len(file) == 1):
-            #print(item)
-            subtemp = read_temp(item)
-            #print('{{'+item+'}}')
-            temp = temp.replace('{{'+item+'}}',subtemp)
-            #temp = temp.replace('\r\n','').replace('\t','').replace('\n','').replace('  ','')
-    return temp
+#def match_subtemp(temp):
+#    file_path = "./template/"
+#    sublist = re.findall(r'{{(.*)}}',temp)
+#    for item in sublist:
+#        file = os.path.join(file_path,item)
+#        if(os.path.exist(file)):
+#            #print(item)
+#            subtemp = read_temp(item)
+#            #print('{{'+item+'}}')
+#            temp = temp.replace('{{'+item+'}}',subtemp)
+#            #temp = temp.replace('\r\n','').replace('\t','').replace('\n','').replace('  ','')
+#    return temp
 
-def get_template(name):
-    str = read_temp(name)
-    return str
+def get_template(filename):
+    file_path = "./template/"
+    file = os.path.join(file_path, filename)
+    temp = open(file,mode='r',encoding='utf-8').read()
+    #temp = match_subtemp(temp)
+    return temp
 
 
 if __name__ == '__main__':

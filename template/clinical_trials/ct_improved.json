@@ -1,4 +1,6 @@
 {
+"query":
+{
 	"bool": {
 		"must": [
 			{
@@ -52,11 +54,28 @@
 				"bool": {
 					"should": {
 						"multi_match": {
-							"query": "{{[geneSynonyms]}}",
+							"query": "cancer carcinoma tumor",
+							"fields": [
+								"title^2",
+								"abstract",
+								"keyword",
+								"meshTags"
+							],
+							"tie_breaker": 0.3,
+							"type": "best_fields"
+						}
+					}
+				}
+			},
+			{
+				"bool": {
+					"should": {
+						"multi_match": {
+							"query": "gene genotype DNA base",
 							"fields": [
 								"title^2",
 								"summary",
-								"inclusion"
+								"inclusion",
 							],
 							"tie_breaker": 0.3,
 							"type": "best_fields"
@@ -72,14 +91,23 @@
 							"fields": [
 								"title^2",
 								"summary",
-								"inclusion"
+								"inclusion",
 							],
 							"tie_breaker": 0.3,
 							"type": "best_fields"
 						}
 					}
 				}
+			},
+			{
+				"match": {
+					"exclusion": {
+						"query": "{{other}}",
+						"boost": -2
+					}
+				}
 			}
 		]
 	}
+}
 }

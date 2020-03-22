@@ -1,4 +1,6 @@
 {
+"query":
+    {
 	"bool": {
 		"must": [
 			{
@@ -52,7 +54,7 @@
 				"bool": {
 					"should": {
 						"multi_match": {
-							"query": "gene genotype DNA base",
+							"query": "{{[geneSynonyms]}}",
 							"fields": [
 								"title^2",
 								"summary",
@@ -82,4 +84,6 @@
 			}
 		]
 	}
+}
+
 }
