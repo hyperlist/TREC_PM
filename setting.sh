@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-yum -y install make gcc gcc-c++ 
+yum -y install make gcc gcc-c++ wget
 yum -y install kernel-devel
 yum -y install libmpc-devel zlib-devel 
 

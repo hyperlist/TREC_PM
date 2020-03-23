@@ -267,5 +267,5 @@ def get_template(filename):
 if __name__ == '__main__':
     #query = extract_query_extension()
     #print(query['bool']['must'])
-    data = sa_extract(doc_id='pubmed20n0001')
+    data = sa_extract(doc_id='pubmed20n0007')
     #print(data)
