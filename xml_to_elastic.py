@@ -29,8 +29,8 @@ def extract_ct_xml(kernel_index):
     print(kernel_index,' finish ',file_path)
 
 def es_index(index, id, extracted_data):
-    #curl -H 'Content-Type:application/json' -XGET http://localhost:9200/ct/xml/1?pretty
-    #curl -X GET "localhost:9200/ct/xml/1?pretty"
+    #curl -H 'Content-Type:application/json' -XGET http://localhost:9200/ct/doc/1?pretty
+    #curl -X GET "localhost:9200/ct/doc/_search?q=id:NCT00001685"
     try:
         es.index(index=index, doc_type='doc', id=id, body=extracted_data)
     except Exception as e:
@@ -39,16 +39,15 @@ def es_index(index, id, extracted_data):
     return
 
 
-def extract_sa_xml(kernel_index):
-    print('\nProgress:',kernel_index)
+def extract_sa_xml():
     # Provide the path to the input xml files
-    list_of_files = []
     start_time = time.time()
     cnt = 0;
-    for i in range(sa_list[kernel_index],sa_list[kernel_index+1]):
-        file_path = data_root + "/ScientificAbstracts/PubMed/pubmed20n"+str(i).rjust(5,'0') +".xml.gz"
+    for i in range(1, 1016):
+        file_path = data_root + "/ScientificAbstracts/PubMed/pubmed20n"+str(i+1).rjust(4,'0') +".xml.gz"
         #print(file_path)
-        data = DataManager.ct_extract(path=input_file)
+        data = DataManager.sa_extract(path=input_file)
+        print(data)
         for extracted_data in data:
             es_index('sa', extracted_data['id'], extracted_data)
         if(cnt%300==0):

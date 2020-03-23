@@ -29,12 +29,15 @@
 					"query": "{{disease}}",
 					"fields": [
 						"title^2",
+						"official_title",
 						"summary",
-						"inclusion"
+						"detailed_description",
+						"condition",
+                        "keyword^2"
 					],
 					"tie_breaker": 0.3,
 					"type": "best_fields",
-					"boost": 1
+					"boost": 2
 				}
 			},
 			{
@@ -43,6 +46,7 @@
 					"fields": [
 						"title^2",
 						"summary",
+						"detailed_description",
 						"inclusion"
 					],
 					"tie_breaker": 0.3,

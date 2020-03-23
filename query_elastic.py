@@ -3,6 +3,8 @@ import json,re,time,sys
 import DataManager
 import os 
 
+re_folder = './qresults'
+
 def construct_ct_query(template, extracted_data):
     disease = extracted_data['disease']
     gene = extracted_data['gene']
@@ -38,11 +40,16 @@ def get_ct_result():
     path = 'template/clinical_trials/'
     file_list = list(os.listdir(path))
     topics = DataManager.extract_query_extension()
+    
+    
+    if (not os.path.exists(re_folder)):
+        os.makedirs(re_folder)
     for file in file_list:
-        temp = DataManager.get_template(os.path.join('clinical_trials', file))
         name = file.split('.')[0]
-        print(re_path)
-        op_file = open('qresults/'+name, 'w')
+        print(name,' start ')
+        temp = DataManager.get_template(os.path.join('clinical_trials', file))
+        
+        op_file = open(os.path.join(re_folder, name+'.txt'), 'w')
         for item in topics:
             query = construct_ct_query(temp, item)
             rank_ctr = 1
@@ -51,12 +58,12 @@ def get_ct_result():
             r = es.search(index='ct', body=query, size=1000,request_timeout=120)
             res = r['hits']['hits']
             for i in res:
-                op_file.write('{}\tQ0\t{}\t{}\t{}\tbaseline\n'.format(item['tnum'], i['_source']['id'], rank_ctr, round(i['_score'], 4)))
+                op_file.write('{}\tQ0\t{}\t{}\t{}\t{}\n'.format(item['tnum'], i['_source']['id'], rank_ctr, round(i['_score'], 4), name))
                 rank_ctr += 1
-            print(item['tnum']," spend time :", time.time() - starttime)
-        print(name," finish :")
-    op_file.close()
-    
+            print('query topic: ', item['tnum'], " spend time :", time.time() - starttime)
+        print(name," finish")
+        op_file.close()
+
     
 def intersection_query():
     topics = DataManager.extract_query_extension()

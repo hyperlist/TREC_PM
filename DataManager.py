@@ -3,6 +3,7 @@ import collections
 import os,re
 import json
 import gzip
+import glob
 
 data_root='./data'
 
@@ -76,6 +77,8 @@ def ct_extract(path=None, doc_id = None):
         file_path = path
     else:
         file_path = data_root + "/ClinicalTrials/*/*/{}.xml".format(doc_id)
+        file_path = glob.glob(file_path)[0]
+        
     if not os.path.exists(file_path):
         print(file_path)
         raise Exception("file not exit!")
@@ -108,8 +111,8 @@ def ct_extract(path=None, doc_id = None):
 
     # brief_summary
     try:
-        brief_summary = root.find('brief_summary').find('textblock').text
-        extracted_data['summary'] = brief_summary
+        summary = root.find('brief_summary').find('textblock').text
+        extracted_data['summary'] = summary.replace('\t',' ').replace('\n',' ').replace('  ','')
     except:
         extracted_data['summary'] = None
 
@@ -190,10 +193,10 @@ def sa_extract(path=None, doc_id = None):
         print(file_path)
         raise Exception("file not exit!")
     data = []
-    file = gzip.open(file_path, "rb").read()
-    fstr = bytes.decode(file)
+    file = gzip.open(file_path, "r").read()
+    #fstr = bytes.decode(file)
     # create xml tree
-    root = ET.fromstring(fstr)
+    root = ET.fromstring(file)
     #root = tree.getroot()
     print(root,len(root))
     print(root.tag,root.attrib)
@@ -264,5 +267,5 @@ def get_template(filename):
 if __name__ == '__main__':
     #query = extract_query_extension()
     #print(query['bool']['must'])
-    data = sa_extract(doc_id='pubmed20n0173')
+    data = sa_extract(doc_id='pubmed20n0001')
     #print(data)
