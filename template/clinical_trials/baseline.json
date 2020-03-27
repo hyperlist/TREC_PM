@@ -1,6 +1,8 @@
 {
+"query":
+    {
 	"bool": {
-		"should": [
+		"must": [
 			{
 				"range": {
 					"minimum_age": {
@@ -19,41 +21,43 @@
 				"match": {
 					"sex": "{{sex}}"
 				}
-			},
+			}
+		],
+		"should": [
 			{
 				"multi_match": {
 					"query": "{{disease}}",
 					"fields": [
-						"title^2",
+						"title",
+						"official_title",
 						"summary",
-						"inclusion"
+						"detailed_description",
+						"condition",
+						"mesh_term",
+                        "keyword"
 					],
 					"tie_breaker": 0.3,
 					"type": "best_fields",
-					"boost": 2
+					"boost": 1
 				}
 			},
 			{
 				"multi_match": {
-					"query": "{{gene}}",
+					"query": "{{gene1}}",
 					"fields": [
-						"title^2",
+						"title",
+						"official_title",
 						"summary",
+						"detailed_description",
 						"inclusion"
 					],
 					"tie_breaker": 0.3,
 					"type": "best_fields",
 					"boost": 2
 				}
-			},
-			{
-				"match": {
-					"exclusion": {
-						"query": "{{other}}",
-						"boost": -2
-					}
-				}
 			}
-		],
+		]
 	}
+}
+
 }

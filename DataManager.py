@@ -112,14 +112,14 @@ def ct_extract(path=None, doc_id = None):
     # brief_summary
     try:
         summary = root.find('brief_summary').find('textblock').text
-        extracted_data['summary'] = summary.replace('\t',' ').replace('\n',' ').replace('  ','')
+        extracted_data['summary'] = summary.replace('\t',' ').replace('\n',' ').replace('  ',' ')
     except:
         extracted_data['summary'] = None
 
     # detailed_description
     try:
-        detailed_description = root.find('detailed_description').find('textblock').text
-        extracted_data['detailed_description'] = detailed_description
+        description = root.find('detailed_description').find('textblock').text
+        extracted_data['detailed_description'] = description.replace('\t',' ').replace('\n',' ').replace('  ',' ')
     except:
         extracted_data['detailed_description'] = None
 
@@ -134,8 +134,8 @@ def ct_extract(path=None, doc_id = None):
     try:
         criteria = root.find('eligibility').find('criteria').find('textblock').text.replace('\r\n',' ').replace('\n',' ').replace('  ',' ')
         m = re.findall('Inclusion Criteria:(.*)Exclusion Criteria:(.*)', criteria)
-        extracted_data['inclusion'] = m[0][0]
-        extracted_data['exclusion'] = m[0][1]
+        extracted_data['inclusion'] = m[0][0].replace('\t',' ').replace('\n',' ').replace('  ',' ')
+        extracted_data['exclusion'] = m[0][1].replace('\t',' ').replace('\n',' ').replace('  ',' ')
         
     except:
         extracted_data['inclusion'] = None
@@ -193,16 +193,14 @@ def sa_extract(path=None, doc_id = None):
         print(file_path)
         raise Exception("file not exit!")
     data = []
-    file = gzip.open(file_path, "r").read()
-    #fstr = bytes.decode(file)
-    # create xml tree
-    root = ET.fromstring(file)
-    #root = tree.getroot()
-    print(root,len(root))
-    print(root.tag,root.attrib)
-
-    for item in root:
-        #print(item)
+    file = gzip.open(file_path, "r")
+    strdata =  bytes.decode(file.read())
+    pubmedset = strdata.split('<PubmedArticle>')
+    for i in range(1,len(pubmedset)):
+        if(i==len(pubmedset)-1):
+            pubmedset[i] = pubmedset[i].replace('</PubmedArticleSet>','')
+        
+        item = ET.fromstring('<PubmedArticle>' + pubmedset[i])
         extracted_data = {}
         # id
         PMID = item[0][0].text
@@ -231,8 +229,6 @@ def sa_extract(path=None, doc_id = None):
         except:
             extracted_data['date'] = None
         data.append(extracted_data)
-        #print(extracted_data)
-
     return data
 
 #def read_temp(filename):

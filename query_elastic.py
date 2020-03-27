@@ -8,6 +8,7 @@ re_folder = './qresults'
 def construct_ct_query(template, extracted_data):
     disease = extracted_data['disease']
     gene = extracted_data['gene']
+    gene1 = extracted_data['gene1']
     age = extracted_data['age']
     sex = extracted_data['gender']
     other = extracted_data['other']
@@ -20,6 +21,7 @@ def construct_ct_query(template, extracted_data):
     seq = " "
     template = template.replace('{{age}}', str(age))
     template = template.replace('{{gene}}', gene)
+    template = template.replace('{{gene1}}', gene1)
     template = template.replace('{{disease}}',disease)
     template = template.replace('{{sex}}',sex)
     template = template.replace('{{other}}',str(other))

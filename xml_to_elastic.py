@@ -11,6 +11,16 @@ sa_list = [0, 253, 506, 759, 1016]
 
 data_root='./data'
 
+def es_index(index, id, extracted_data):
+    #curl -H 'Content-Type:application/json' -XGET http://localhost:9200/ct/doc/1?pretty
+    #curl -X GET "localhost:9200/ct/doc/_search?q=id:NCT00001685"
+    try:
+        es.index(index=index, doc_type='doc', id=id, body=extracted_data)
+    except Exception as e:
+        print('Document not indexed!')
+        print('Error Message:', e)
+    return
+
 def extract_ct_xml(kernel_index):
     print('\nProgress:',kernel_index)
     list_of_files = []
@@ -28,33 +38,30 @@ def extract_ct_xml(kernel_index):
             print("\nExecution time: %.2f seconds" % (time.time() - start_time))
     print(kernel_index,' finish ',file_path)
 
-def es_index(index, id, extracted_data):
-    #curl -H 'Content-Type:application/json' -XGET http://localhost:9200/ct/doc/1?pretty
-    #curl -X GET "localhost:9200/ct/doc/_search?q=id:NCT00001685"
-    try:
-        es.index(index=index, doc_type='doc', id=id, body=extracted_data)
-    except Exception as e:
-        print('Document not indexed!')
-        print('Error Message:', e)
-    return
-
-
-def extract_sa_xml():
-    # Provide the path to the input xml files
-    start_time = time.time()
-    cnt = 0;
-    for i in range(1, 1016):
-        file_path = data_root + "/ScientificAbstracts/PubMed/pubmed20n"+str(i+1).rjust(4,'0') +".xml.gz"
-        #print(file_path)
-        data = DataManager.sa_extract(path=input_file)
-        print(data)
-        for extracted_data in data:
-            es_index('sa', extracted_data['id'], extracted_data)
-        if(cnt%300==0):
-            print('kernel_index', kernel_index,' at ',cnt)
-            print("\nExecution time: %.2f seconds" % (time.time() - start_time))
-    print(kernel_index,' finish ')
-
+def extract_sa_xml(kernel_index):
+    #curl -H 'Content-Type:application/json' -XGET http://localhost:9200/sa/doc/_search
+    #4,70
+    for i in range(69, 1016):
+        if(i % kernel_index == 0):
+            t0 = time.time()
+            file_path = data_root + "/ScientificAbstracts/PubMed/pubmed20n"+str(i+1).rjust(4,'0') +".xml.gz"
+            print('[kennel start]', i, ' ', file_path)
+            data = DataManager.sa_extract(path=file_path)
+            for extracted_data in data:
+                es_index('sa', extracted_data['id'], extracted_data)
+             print('[kennel finish]', i, ' ', file_path)
+             
+def extract_sa_xml_lost(num):
+    #curl -H 'Content-Type:application/json' -XGET http://localhost:9200/sa/doc/_search
+    #4,70
+    t0 = time.time()
+    file_path = data_root + "/ScientificAbstracts/PubMed/pubmed20n"+str(num).rjust(4,'0') +".xml.gz"
+    print('[kennel start]', i, ' ', file_path)
+    data = DataManager.sa_extract(path=file_path)
+    for extracted_data in data:
+        es_index('sa', extracted_data['id'], extracted_data)
+     print('[kennel finish]', i, ' ', file_path)
+            
 
 if __name__ == '__main__':
     try:
@@ -65,11 +72,15 @@ if __name__ == '__main__':
         raise Exception("\nCannot connect to Elasticsearch!")
     
     start_time = time.time()
+    
+    extract_sa_xml_lost(4)
     # create process pool
     p = Pool(4)
     for i in range(4):
-        p.apply_async(extract_ct_xml, args=(i,))
+        #p.apply_async(extract_ct_xml, args=(i,))
+        p.apply_async(extract_sa_xml, args=(i,))
     p.close()
     p.join()
+    #extract_sa_xml(0)
     print("\nExecution time: %.2f seconds" % (time.time() - start_time))
    
