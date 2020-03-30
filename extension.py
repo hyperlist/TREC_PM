@@ -53,8 +53,9 @@ def get_synonyms(conceptGraphId):
     
 
 if __name__ == '__main__':
-    topics = DataManager.extract_query_xml()
-    savejson = open('data/topics/topics2019_extension.json','w',encoding='utf-8')
+    name='topics2017.xml'
+    topics = DataManager.extract_query_xml(name)
+    savejson = open('data/topics/topics2017_extension.json','w',encoding='utf-8')
     df = pandas.read_csv('data/Homo_sapiens.gene_info',delimiter = '\t')
     '''
     genecode = 'A1BG'
@@ -63,28 +64,31 @@ if __name__ == '__main__':
     
     '''
     for item in topics:
-        print(item)
+        #print(item)
         
         #disease
         conceptlabel, synonyms, ancestors= search(item['disease'])
         item['diseasePreferredTerm'] = conceptlabel
         item['diseaseSynonyms'] = synonyms
         item['diseaseHypernyms'] = ancestors
+        
         #gene
         try:
             gene = item['gene1'].split(' ')[0]
             row = df[(df.Symbol==gene)]
-            item['geneSynonyms'] = row.Synonyms.values[0].split('|')
-            item['geneDescriptions'] = row.description.values[0]
+            geneSynonyms = list(row.Synonyms.values)
+            if(len(geneSynonyms)!=0):
+                item['geneSynonyms'] = geneSynonyms[0].split('|')
+                item['geneDescriptions'] = row.description.values[0]
         except: 
             gene1 = item['gene1'].split(' ')[0]
             gene = gene1.split('-')[0]
             row = df[(df.Symbol==gene)]
-            item['geneSynonyms'] = row.Synonyms.values[0].split('|')
-            item['geneDescriptions'] = row.description.values[0]
-            gene = gene1.split('-')[1]
-            row = df[(df.Symbol==gene)]
-            item['geneSynonyms'] = item['geneSynonyms'] + row.Synonyms.values[0].split('|')
+            geneSynonyms = list(row.Synonyms.values)
+            if(len(geneSynonyms)!=0):
+                item['geneSynonyms'] = geneSynonyms[0].split('|')
+                item['geneDescriptions'] = row.description.values[0]
+                
         line = json.dumps(dict(item), ensure_ascii=False) + "\n"
         savejson.write(line)
         

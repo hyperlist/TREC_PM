@@ -40,27 +40,28 @@ def extract_ct_xml(kernel_index):
 
 def extract_sa_xml(kernel_index):
     #curl -H 'Content-Type:application/json' -XGET http://localhost:9200/sa/doc/_search
-    #4,70
-    for i in range(69, 1016):
-        if(i % kernel_index == 0):
-            t0 = time.time()
+    
+    for i in range(227, 1016):
+        #print(i,i % 4 ,kernel_index)
+        if(i % 4 == kernel_index):
+            start_time = time.time()
             file_path = data_root + "/ScientificAbstracts/PubMed/pubmed20n"+str(i+1).rjust(4,'0') +".xml.gz"
-            print('[kennel start]', i, ' ', file_path)
+            #print('[kennel', kernel_index, 'start] ', file_path)
             data = DataManager.sa_extract(path=file_path)
             for extracted_data in data:
                 es_index('sa', extracted_data['id'], extracted_data)
-             print('[kennel finish]', i, ' ', file_path)
+            print('[kennel', kernel_index, 'finish] ', file_path)
+            print("Execution time: %.2f seconds" % (time.time() - start_time))
+            '''
+            '''
              
 def extract_sa_xml_lost(num):
-    #curl -H 'Content-Type:application/json' -XGET http://localhost:9200/sa/doc/_search
-    #4,70
-    t0 = time.time()
     file_path = data_root + "/ScientificAbstracts/PubMed/pubmed20n"+str(num).rjust(4,'0') +".xml.gz"
-    print('[kennel start]', i, ' ', file_path)
+    print('[start]  ', file_path)
     data = DataManager.sa_extract(path=file_path)
     for extracted_data in data:
         es_index('sa', extracted_data['id'], extracted_data)
-     print('[kennel finish]', i, ' ', file_path)
+    print('[finish] ', file_path)
             
 
 if __name__ == '__main__':
@@ -73,14 +74,17 @@ if __name__ == '__main__':
     
     start_time = time.time()
     
-    extract_sa_xml_lost(4)
-    # create process pool
+    for i in range(227, 1016):
+        start_time = time.time()
+        extract_sa_xml_lost(i)
+        print("Execution time: %.2f seconds\n" % (time.time() - start_time))
+    '''
     p = Pool(4)
     for i in range(4):
         #p.apply_async(extract_ct_xml, args=(i,))
         p.apply_async(extract_sa_xml, args=(i,))
     p.close()
     p.join()
-    #extract_sa_xml(0)
-    print("\nExecution time: %.2f seconds" % (time.time() - start_time))
+    
+    '''
    

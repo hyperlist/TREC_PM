@@ -1,0 +1,67 @@
+{
+"query":
+{
+    "filtered" : {                          
+         "filter" : {                       
+            "bool": {                       
+                "must": [                   
+                    {                       
+                        "range": {          
+                            "minimum_age": {
+                                "lte": 1    
+                            }               
+                        }                   
+                    },                      
+                    {                       
+                        "range": {          
+                            "maximum_age": {
+                                "gte": 98   
+                            }               
+                        }                   
+                    },                      
+                    {                       
+                        "term": {          
+                            "sex": "male"   
+                        }                   
+                    }                       
+                ]
+                "should": [
+                    {
+                        "multi_match": {
+                            "query": "{{disease}}",
+                            "fields": [
+                                "title",
+                                "official_title",
+                                "summary",
+                                "detailed_description",
+                                "condition",
+                                "mesh_term",
+                                "keyword"
+                            ],
+                            "tie_breaker": 0.3,
+                            "type": "best_fields",
+                            "boost": 1
+                        }
+                    },
+                    {
+                        "multi_match": {
+                            "query": "{{gene}}",
+                            "fields": [
+                                "title",
+                                "official_title",
+                                "summary",
+                                "detailed_description",
+                                "inclusion"
+                            ],
+                            "tie_breaker": 0.3,
+                            "type": "best_fields",
+                            "boost": 2
+                        }
+                    }
+                ]                
+            }                               
+        }                                   
+    }
+}
+
+}

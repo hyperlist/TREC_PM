@@ -38,12 +38,27 @@
 					],
 					"tie_breaker": 0.3,
 					"type": "best_fields",
-					"boost": 2
+					"boost": 1
 				}
 			},
 			{
 				"multi_match": {
-					"query": "{{gene}}",
+					"query": "{{gene1}}",
+					"fields": [
+						"title",
+						"official_title",
+						"summary",
+						"detailed_description",
+						"inclusion"
+					],
+					"tie_breaker": 0.3,
+					"type": "best_fields",
+					"boost": 3
+				}
+			},
+			{
+				"multi_match": {
+					"query": "{{gene1_code}}",
 					"fields": [
 						"title",
 						"official_title",
@@ -54,6 +69,21 @@
 					"tie_breaker": 0.3,
 					"type": "best_fields",
 					"boost": 4
+				}
+			},
+			{
+				"multi_match": {
+					"query": "{{gene2}}",
+					"fields": [
+						"title",
+						"official_title",
+						"summary",
+						"detailed_description",
+						"inclusion"
+					],
+					"tie_breaker": 0.3,
+					"type": "best_fields",
+					"boost": 2
 				}
 			}
 		]

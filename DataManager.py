@@ -7,16 +7,16 @@ import glob
 
 data_root='./data'
 
-def extract_query_extension():
-    lines = open(os.path.join(data_root, os.path.join("topics","topics2019_extension.json")), "r").readlines()
+def extract_query_extension(name='topics2019_extension.json'):
+    lines = open(os.path.join(data_root, os.path.join("topics",name)), "r").readlines()
     datas = []
     for line in lines:
         extracted_data = json.loads(line)
         datas.append(extracted_data)
     return datas
     
-def extract_query_xml():
-    query_file = open(os.path.join(data_root, os.path.join("topics","topics2019.xml")), "r")
+def extract_query_xml(name='topics2019.xml'):
+    query_file = open(os.path.join(data_root, os.path.join("topics",name)), "r")
 
     tree = ET.parse(query_file)
     root = tree.getroot()
@@ -88,14 +88,14 @@ def ct_extract(path=None, doc_id = None):
     extracted_data = collections.OrderedDict()
     keyword_list = []
     mesh_term_list = []
-    # nct_id
+    # id
     try:
         nct_id = root.find('id_info').find('nct_id').text
         extracted_data['id'] = nct_id
     except:
         extracted_data['id'] = None
 
-    # brief_title
+    # title
     try:
         brief_title = root.find('brief_title').text
         extracted_data['title'] = brief_title
@@ -109,7 +109,7 @@ def ct_extract(path=None, doc_id = None):
     except:
         extracted_data['official_title'] = None
 
-    # brief_summary
+    # summary
     try:
         summary = root.find('brief_summary').find('textblock').text
         extracted_data['summary'] = summary.replace('\t',' ').replace('\n',' ').replace('  ',' ')
@@ -130,7 +130,8 @@ def ct_extract(path=None, doc_id = None):
     except:
         extracted_data['condition'] = None
 
-    # criteria
+    # inclusion
+    # exclusion
     try:
         criteria = root.find('eligibility').find('criteria').find('textblock').text.replace('\r\n',' ').replace('\n',' ').replace('  ',' ')
         m = re.findall('Inclusion Criteria:(.*)Exclusion Criteria:(.*)', criteria)
@@ -141,7 +142,7 @@ def ct_extract(path=None, doc_id = None):
         extracted_data['inclusion'] = None
         extracted_data['exclusion'] = None
         
-    # gender
+    # sex
     try:
         gender = str.lower(root.find('eligibility').find('gender').text)
         extracted_data['sex'] = gender

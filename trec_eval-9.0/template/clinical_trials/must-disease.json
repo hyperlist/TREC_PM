@@ -2,8 +2,8 @@
 "query":
     {
 	"bool": {
-        "must": [
-			{
+		"must": [
+            {
 				"range": {
 					"minimum_age": {
 						"lte": {{age}}
@@ -18,29 +18,30 @@
 				}
 			},
 			{
-				"term": {
+				"match": {
 					"sex": "{{sex}}"
 				}
-			}
+			},
+            {
+                "multi_match": {
+                    "query": "{{disease}}",
+                    "fields": [
+                            "title",
+                            "official_title",
+                            "summary",
+                            "detailed_description",
+                            "condition",
+                            "mesh_term",
+                            "keyword"
+                    ],
+                    "tie_breaker": 0.3,
+                    "type": "best_fields",
+                    "boost": 1
+                }
+            }
+			
 		],
 		"should": [
-			{
-				"multi_match": {
-					"query": "{{disease}}",
-					"fields": [
-						"title",
-						"official_title",
-						"summary",
-						"detailed_description",
-						"condition",
-						"mesh_term",
-                        "keyword"
-					],
-					"tie_breaker": 0.3,
-					"type": "best_fields",
-					"boost": 2
-				}
-			},
 			{
 				"multi_match": {
 					"query": "{{gene}}",
@@ -53,26 +54,9 @@
 					],
 					"tie_breaker": 0.3,
 					"type": "best_fields",
-					"boost": 4
+                    "boost": 2
 				}
 			},
-            {
-                "multi_match": {
-                    "query": "{{diseasePreferredTerm}}",
-                    "fields": [
-                        "title",
-						"official_title",
-						"summary",
-						"detailed_description",
-						"condition",
-						"mesh_term",
-                        "keyword"
-                    ],
-                    "tie_breaker": 0.3,
-                    "type": "best_fields",
-                    "boost": 1
-                }
-            },
             {
                 "multi_match": {
                     "query": "{{[geneSynonyms]}}",
@@ -91,5 +75,4 @@
 		]
 	}
 }
-
 }

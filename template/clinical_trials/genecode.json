@@ -2,7 +2,7 @@
 "query":
     {
 	"bool": {
-        "must": [
+		"must": [
 			{
 				"range": {
 					"minimum_age": {
@@ -38,12 +38,27 @@
 					],
 					"tie_breaker": 0.3,
 					"type": "best_fields",
-					"boost": 2
+					"boost": 1
 				}
 			},
 			{
 				"multi_match": {
-					"query": "{{gene}}",
+					"query": "{{gene1}}",
+					"fields": [
+						"title",
+						"official_title",
+						"summary",
+						"detailed_description",
+						"inclusion"
+					],
+					"tie_breaker": 0.3,
+					"type": "best_fields",
+					"boost": 3
+				}
+			},
+			{
+				"multi_match": {
+					"query": "{{gene1_code}}",
 					"fields": [
 						"title",
 						"official_title",
@@ -56,38 +71,21 @@
 					"boost": 4
 				}
 			},
-            {
-                "multi_match": {
-                    "query": "{{diseasePreferredTerm}}",
-                    "fields": [
-                        "title",
-						"official_title",
-						"summary",
-						"detailed_description",
-						"condition",
-						"mesh_term",
-                        "keyword"
-                    ],
-                    "tie_breaker": 0.3,
-                    "type": "best_fields",
-                    "boost": 1
-                }
-            },
-            {
-                "multi_match": {
-                    "query": "{{[geneSynonyms]}}",
-                    "fields": [
+			{
+				"multi_match": {
+					"query": "{{gene2}}",
+					"fields": [
 						"title",
 						"official_title",
 						"summary",
 						"detailed_description",
 						"inclusion"
-                    ],
-                    "tie_breaker": 0.3,
-                    "type": "best_fields",
-                    "boost": 2
-                }
-            }
+					],
+					"tie_breaker": 0.3,
+					"type": "best_fields",
+					"boost": 2
+				}
+			}
 		]
 	}
 }

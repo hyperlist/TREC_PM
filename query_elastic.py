@@ -8,25 +8,41 @@ re_folder = './qresults'
 def construct_ct_query(template, extracted_data):
     disease = extracted_data['disease']
     gene = extracted_data['gene']
-    gene1 = extracted_data['gene1']
     age = extracted_data['age']
     sex = extracted_data['gender']
-    other = extracted_data['other']
     diseasePreferredTerm = extracted_data['diseasePreferredTerm']
     diseaseSynonyms = extracted_data['diseaseSynonyms']
     diseaseHypernyms = extracted_data['diseaseHypernyms']
     geneSynonyms = extracted_data['geneSynonyms']
     geneDescriptions = extracted_data['geneDescriptions']
+    
+    if extracted_data['other']!=None:
+        other = extracted_data['other']
+    else:
+        other = None
+        
+    gene1 = extracted_data['gene1']
+    if extracted_data['gene1_code']!=None:
+        gene1_code = extracted_data['gene1_code']
+    else:
+        gene1_code = geneSynonyms[0]
+    if extracted_data['gene2']!=None:
+        gene2 = extracted_data['gene2']
+    else:
+        gene2 = gene1
+        
     #print(template)
     seq = " "
     template = template.replace('{{age}}', str(age))
     template = template.replace('{{gene}}', gene)
     template = template.replace('{{gene1}}', gene1)
+    template = template.replace('{{gene2}}', gene2)
+    template = template.replace('{{gene1_code}}', str(gene1_code))
     template = template.replace('{{disease}}',disease)
     template = template.replace('{{sex}}',sex)
     template = template.replace('{{other}}',str(other))
     template = template.replace('{{diseasePreferredTerm}}', str(diseasePreferredTerm))
-    template = template.replace('{{[geneDescriptions]}}',str(geneDescriptions))
+    template = template.replace('{{geneDescriptions}}',str(geneDescriptions))
     template = template.replace('{{[diseaseSynonyms]}}',seq.join(diseaseSynonyms))
     template = template.replace('{{[diseaseHypernyms]}}',seq.join(diseaseHypernyms))
     template = template.replace('{{[geneSynonyms]}}',seq.join(geneSynonyms))
@@ -41,7 +57,7 @@ def construct_ct_query(template, extracted_data):
 def get_ct_result():
     path = 'template/clinical_trials/'
     file_list = list(os.listdir(path))
-    topics = DataManager.extract_query_extension()
+    topics = DataManager.extract_query_extension(name='topics2017_extension.json')
     
     
     if (not os.path.exists(re_folder)):
@@ -68,7 +84,7 @@ def get_ct_result():
 
     
 def intersection_query():
-    topics = DataManager.extract_query_extension()
+    topics = DataManager.extract_query_extension(name='topics2017_extension.json')
     while 1:
         temp = input("Enter the topic number you want to search 1~30, Enter 'q' to quit: ")
         if temp == "q":
@@ -80,8 +96,6 @@ def intersection_query():
         print(res[2]['_source']['id'], res[2]['_score'])
     
 if __name__ == '__main__':
-    
-    
     try:
         es = elasticsearch.Elasticsearch([{'host': 'localhost', 'port': 9200}])
     except Exception as e:

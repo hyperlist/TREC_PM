@@ -2,7 +2,7 @@
 "query":
     {
 	"bool": {
-        "must": [
+		"must": [
 			{
 				"range": {
 					"minimum_age": {
@@ -38,7 +38,7 @@
 					],
 					"tie_breaker": 0.3,
 					"type": "best_fields",
-					"boost": 2
+					"boost": 1
 				}
 			},
 			{
@@ -53,41 +53,23 @@
 					],
 					"tie_breaker": 0.3,
 					"type": "best_fields",
-					"boost": 4
+					"boost": 2
 				}
 			},
             {
-                "multi_match": {
-                    "query": "{{diseasePreferredTerm}}",
-                    "fields": [
-                        "title",
-						"official_title",
-						"summary",
-						"detailed_description",
-						"condition",
-						"mesh_term",
-                        "keyword"
-                    ],
-                    "tie_breaker": 0.3,
-                    "type": "best_fields",
-                    "boost": 1
-                }
-            },
-            {
-                "multi_match": {
-                    "query": "{{[geneSynonyms]}}",
-                    "fields": [
+				"multi_match": {
+					"query": "patients cancer study prognosis treatment tumor therapy metastatic cell response progression drug surgery",
+					"fields": [
 						"title",
 						"official_title",
 						"summary",
-						"detailed_description",
-						"inclusion"
-                    ],
-                    "tie_breaker": 0.3,
-                    "type": "best_fields",
-                    "boost": 2
-                }
-            }
+						"detailed_description"
+					],
+					"tie_breaker": 0.3,
+					"type": "best_fields",
+					"boost": 1
+				}
+			}
 		]
 	}
 }
